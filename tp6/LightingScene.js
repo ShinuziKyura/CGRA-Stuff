@@ -23,7 +23,9 @@ LightingScene.prototype.init = function(application) {
 	this.initLights();
 
 	this.AmbientLighting = true;
-	this.Speed = 3;
+	this.speed = 0;
+	this.rotationSpeed = 4;
+	this.accel = 0.5;
 
 	this.light0 = true;
 	this.light1 = false;
@@ -146,7 +148,30 @@ LightingScene.prototype.init = function(application) {
 	this.boardAppearance.loadTexture("..\\resources\\images\\board.png");
 	this.boardAppearance.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
 
-	this.setUpdatePeriod(200);
+	this.sub1Appearance = new CGFappearance(this); // Criar nova textura
+	this.sub1Appearance.setAmbient(0,0,0,1);
+	this.sub1Appearance.setDiffuse(0.9,0.9,0.9,1);
+	this.sub1Appearance.setSpecular(0.3,0.3,0.3,1);
+	this.sub1Appearance.setShininess(50);
+	this.sub1Appearance.loadTexture("..\\resources\\images\\rust.jpg");
+
+	this.sub2Appearance = new CGFappearance(this); // Criar nova textura
+	this.sub2Appearance.setAmbient(0,0,0,1);
+	this.sub2Appearance.setDiffuse(0.9,0.9,0.9,1);
+	this.sub2Appearance.setSpecular(0.3,0.3,0.3,1);
+	this.sub2Appearance.setShininess(50);
+	this.sub2Appearance.loadTexture("..\\resources\\images\\metal.jpg");
+
+	this.submarineAppearances ={
+		"Rusted" : 0,
+		"Metal" : 1
+	};
+
+	this.AppearanceList = new Array(this.sub1Appearance, this.sub2Appearance);
+
+	this.currentSubmarineTexture = 1;
+
+	this.setUpdatePeriod(100);
 };
 
 LightingScene.prototype.doSomething = function () {
@@ -163,14 +188,14 @@ LightingScene.prototype.initLights = function() {
 	this.setGlobalAmbientLight(0.0, 1.0, 1.0, 1.0); // Cyan ambient light
 
 	// Positions for four lights
-	this.lights[0].setPosition(-5, 5, -5, 1);
-//	this.lights[0].setVisible(true); // show marker on light position (different from enabled)
+	this.lights[0].setPosition(0, 0, -2, 1);
+	this.lights[0].setVisible(true); // show marker on light position (different from enabled)
 	this.lights[1].setPosition(10.5, 6.0, 1.0, 1.0);
-//	this.lights[1].setVisible(true); // show marker on light position (different from enabled)
+	this.lights[1].setVisible(true); // show marker on light position (different from enabled)
 	this.lights[2].setPosition(10.5, 6.0, 5.0, 1.0);
-//	this.lights[2].setVisible(true); // show marker on light position (different from enabled)
+	this.lights[2].setVisible(true); // show marker on light position (different from enabled)
 	this.lights[3].setPosition(4.0, 6.0, 5.0, 1.0);
-//	this.lights[3].setVisible(true); // show marker on light position (different from enabled)
+	this.lights[3].setVisible(true); // show marker on light position (different from enabled)
 
 	this.lights[0].setAmbient(0, 0, 0, 1);
 	this.lights[0].setDiffuse(0.8, 0.8, 0.8, 1.0);
@@ -202,14 +227,14 @@ LightingScene.prototype.initLights = function() {
 	this.lights[4].setDiffuse(0.6, 0.6, 0.6, 1.0);
 	this.lights[4].setSpecular(0.1, 0.1, 0.1, 1.0);
 	this.lights[4].setPosition(-1, 4.0, 7.5, 1.0);
-//	this.lights[4].setVisible(true);
+	this.lights[4].setVisible(true);
 	this.lights[4].enable();
 
 	this.lights[5].setAmbient(0, 0, 0, 1);
 	this.lights[5].setDiffuse(0.9, 0.9, 0.9, 1.0);
 	this.lights[5].setSpecular(0.6, 0.6, 0.6, 1.0);
 	this.lights[5].setPosition(7.0, 8.0, 7.0, 1.0);
-//	this.lights[5].setVisible(true);
+	this.lights[5].setVisible(true);
 	this.lights[5].enable();
 };
 
@@ -241,6 +266,20 @@ LightingScene.prototype.update = function(currTime) {
 		this.clockpost.updateClocks(currTime);
 };
 
+LightingScene.prototype.rotateSubmarine = function(direction) {
+	// 0 -> left
+	if (direction == 0) {
+   		this.sub_pos_rotation += 2 * this.speed * this.rotationSpeed;
+    	this.sub_pos_rotation %= 360;
+	}
+	else {
+		this.sub_pos_rotation -= 2 * this.speed * this.rotationSpeed;
+            if (this.sub_pos_rotation < 0)
+                this.sub_pos_rotation = 360 - this.speed * this.rotationSpeed;
+	}
+
+}
+
 LightingScene.prototype.display = function() {
 	// ---- BEGIN Background, camera and axis setup
 
@@ -262,6 +301,10 @@ LightingScene.prototype.display = function() {
 	this.axis.display();
 
 	this.materialDefault.apply();
+
+	this.sub_pos_x -= (this.speed / 10) * Math.sin(this.sub_pos_rotation * RADUNIT);
+    this.sub_pos_z -= (this.speed / 10) * Math.cos(this.sub_pos_rotation * RADUNIT);
+
 
 	// ---- END Background, camera and axis setup
 
@@ -384,10 +427,24 @@ LightingScene.prototype.display = function() {
 		this.translate(this.sub_pos_x, this.sub_pos_y, this.sub_pos_z);
 		this.pushMatrix();
 			this.rotate(this.sub_pos_rotation * RADUNIT, 0, 1, 0);
-
+			this.AppearanceList[this.currentSubmarineTexture].apply();
 			this.submarine.displaySubmarine();
 		this.popMatrix();
 	this.popMatrix();
 
 	// ---- END Primitive drawing section
 };
+
+LightingScene.prototype.incrementVelocity = function () {
+	if (this.speed > 5)
+		this.speed = 5;
+	else
+		this.speed += this.accel;
+}
+
+LightingScene.prototype.decrementVelocity = function () {
+	if (this.speed < -5)
+		this.speed = -5;
+	else
+		this.speed -= this.accel;
+}

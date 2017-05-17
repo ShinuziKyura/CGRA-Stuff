@@ -270,4 +270,9 @@ MyClockPost.prototype.displayClockPost = function () {
     this.scene.popMatrix();
 };
 
-// Criar função update
+MyClockPost.prototype.updateClocks = function (currTime) {
+	this.clock1.updateClock(currTime);
+	this.clock2.updateClock(currTime);
+	this.clock3.updateClock(currTime);
+	this.clock4.updateClock(currTime);	
+}

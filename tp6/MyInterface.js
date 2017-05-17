@@ -53,12 +53,14 @@ MyInterface.prototype.init = function(application) {
 	lights.add(this.scene, 'AmbientLighting');
 
 
+	var submarine = this.gui.addFolder("Submarine");
+	submarine.add(this.scene, 'currentSubmarineTexture', this.scene.submarineAppearances);
+
 	// add a slider
-	// must be a numeric variable of the scene, initialized in scene.init e.g.
-	// this.speed=3;
+	// must be a numeric variable of the scene, initialized in scene.init
 	// min and max values can be specified as parameters
 
-	this.gui.add(this.scene, 'Speed', 1, 10);
+	this.gui.add(this.scene, 'accel', 0, 1);
 
 	return true;
 };
@@ -79,24 +81,19 @@ MyInterface.prototype.processKeyboard = function(event) {
 	{
 		case (97):
 			console.log("Key 'A' pressed");
-            this.scene.sub_pos_rotation += this.scene.Speed;
-            this.scene.sub_pos_rotation %= 360;
+			this.scene.rotateSubmarine(0);
             break;
         case (100):
 			console.log("Key 'D' pressed");
-            this.scene.sub_pos_rotation -= this.scene.Speed;
-            if (this.scene.sub_pos_rotation < 0)
-                this.scene.sub_pos_rotation = 360 - this.scene.Speed;
+			this.scene.rotateSubmarine(1);
             break;
         case (115):
     		console.log("Key 'S' pressed");
-            this.scene.sub_pos_x -= (this.scene.Speed / 10) * Math.sin(this.scene.sub_pos_rotation * Math.PI / 180.0);
-            this.scene.sub_pos_z -= (this.scene.Speed / 10) * Math.cos(this.scene.sub_pos_rotation * Math.PI / 180.0);
+            this.scene.decrementVelocity();
             break;
         case (119):
         	console.log("Key 'W' pressed");
-            this.scene.sub_pos_x += (this.scene.Speed / 10) * Math.sin(this.scene.sub_pos_rotation * Math.PI / 180.0);
-            this.scene.sub_pos_z += (this.scene.Speed / 10) * Math.cos(this.scene.sub_pos_rotation * Math.PI / 180.0);
+        	this.scene.incrementVelocity();
             break;
 	};
 };

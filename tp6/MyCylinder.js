@@ -76,6 +76,14 @@
             this.indices.push(i * (this.slices + 1) + j + 1);
             this.indices.push(i * (this.slices + 1) + j + this.slices + 2);
             this.indices.push(i * (this.slices + 1) + j + this.slices + 1);
+
+            this.indices.push(i * (this.slices + 1) + j + this.slices + 1);
+            this.indices.push(i * (this.slices + 1) + j + this.slices + 2);
+            this.indices.push(i * (this.slices + 1) + j + 1);
+
+            this.indices.push(i * (this.slices + 1) + j + this.slices + 1);
+            this.indices.push(i * (this.slices + 1) + j + 1);
+            this.indices.push(i * (this.slices + 1) + j);
         }
     }
     if (this.bases == 1)
