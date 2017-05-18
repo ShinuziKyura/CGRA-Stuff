@@ -17,6 +17,7 @@ serialInclude([
 	'MyClockHand.js',
 	'MySubmarine.js',
 	'MyClockPost.js',
+	'MyTrapezoid.js',
 
 	main=function() {
 		var app = new CGFapplication(document.body);

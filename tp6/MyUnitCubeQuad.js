@@ -6,7 +6,7 @@
 function MyUnitCubeQuad(scene) {
 	CGFobject.call(this, scene);
 
-    this.quad = new MyQuad(this.scene);
+    this.quad = new MyQuad(this.scene); // Not working like this
 };
 
 MyUnitCubeQuad.prototype = Object.create(CGFobject.prototype);

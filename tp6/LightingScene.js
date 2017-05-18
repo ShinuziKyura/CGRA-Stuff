@@ -36,9 +36,9 @@ LightingScene.prototype.init = function(application) {
 
 	this.enableClock = true;
 
-	this.sub_pos_x = 8;
+	this.sub_pos_x = 0;
 	this.sub_pos_y = 5;
-	this.sub_pos_z = 8;
+	this.sub_pos_z = 10;
 	this.sub_pos_rotation = 180;
 
 	this.gl.clearColor(0.0, 0.3, 0.3, 1.0);
@@ -50,9 +50,9 @@ LightingScene.prototype.init = function(application) {
 	this.axis = new CGFaxis(this);
 
 	// Scene elements
-/*	this.table = new MyTable(this);
-	this.wall = new MyQuad(this, -1, 2, -0.5, 1.5);
-*/	this.floor = new MyQuad(this, 0, 10000, 0, 10000);
+//	this.table = new MyTable(this);
+	this.wall = new MyQuad(this, 4);
+	this.floor = new Plane(this, 10, 0, 10000, 0, 10000); // Changing the second parameter gives better image quality
 
 /*	this.boardA = new Plane(this, BOARD_A_DIVISIONS, -0.25, 1.25, 0, 1);
 	this.boardB = new Plane(this, BOARD_B_DIVISIONS);
@@ -335,10 +335,10 @@ LightingScene.prototype.display = function() {
 //		this.materialWall.apply();
 		this.windowAppearance.apply();
 		this.wall.display();
-	this.popMatrix();
+	this.popMatrix(); */
 
 	// Plane Wall
-	this.pushMatrix();
+/*	this.pushMatrix();
 		this.translate(7.5, 4, 0);
 		this.scale(15, 8, 0.2);
 

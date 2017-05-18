@@ -3,41 +3,60 @@
  * @param gl {WebGLRenderingContext}
  * @constructor
  */
-function MyQuad(scene, min_s = 0, max_s = 1, min_t = 0, max_t = 1) {
+function MyQuad(scene, slices) {
 	CGFobject.call(this, scene);
 
-	this.initBuffers(min_s, max_s, min_t, max_t);
+	this.slices = slices;
+
+	this.initBuffers();
 }
 
 MyQuad.prototype = Object.create(CGFobject.prototype);
 MyQuad.prototype.constructor=MyQuad;
 
-MyQuad.prototype.initBuffers = function (min_s, max_s, min_t, max_t) {
-	this.vertices = [
-        -0.5, 0.5, 0, // 0
-		0.5, 0.5, 0, // 1
-		-0.5, -0.5, 0, // 2
-        0.5, -0.5, 0 // 3
-	];
+MyQuad.prototype.initBuffers = function () {
+	var deg_rad = Math.PI / 180;
 
-	this.indices = [
-        2, 1, 0,
-		1, 2, 3
-    ];
+	var angle = 360.0 / this.slices;
 
-	this.normals = [
-		0, 0, 1,
-		0, 0, 1,
-		0, 0, 1,
-		0, 0, 1
-	];
+	this.vertices = [];
+	for (i = 0; i < this.slices; ++i)
+	{
+		this.vertices.push(Math.cos(deg_rad * i * angle));
+		this.vertices.push(Math.sin(deg_rad * i * angle));
+		this.vertices.push(0);
+	}
+	this.vertices.push(0);
+	this.vertices.push(0);
+	this.vertices.push(0);
 
-	this.texCoords = [
-		min_s, min_t,
-		max_s, min_t,
-		min_s, max_t,
-		max_s, max_t
-	];
+	this.indices = [];
+	for (i = 0; i < this.slices; ++i)
+	{
+		this.indices.push(i);
+		this.indices.push((i + 1) % this.slices);
+		this.indices.push((this.vertices.length / 3) - 1);
+	}
+
+	this.normals = [];
+	for (i = 0; i < this.slices; ++i)
+	{
+		this.normals.push(0);
+		this.normals.push(0);
+		this.normals.push(1);
+	}
+	this.normals.push(0);
+	this.normals.push(0);
+	this.normals.push(1);
+
+	this.texCoords = [];
+	for (i = 0; i < this.slices; ++i)
+	{
+		this.texCoords.push((Math.cos(deg_rad * i * angle) + 1) / 2);
+		this.texCoords.push((-Math.sin(deg_rad * i * angle) + 1) / 2);
+	}
+    this.texCoords.push(0.5);
+    this.texCoords.push(0.5);
 
 	this.primitiveType=this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
