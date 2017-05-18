@@ -49,10 +49,11 @@
             this.vertices.push(Math.sin(deg_rad * i * angle));
             this.vertices.push(1);
         }
-        for (i = 0; i < 5; ++i)
-        {
-            this.vertices.push(0);
-        }
+        this.vertices.push(0);
+        this.vertices.push(0);
+        this.vertices.push(0);
+        this.vertices.push(0);
+        this.vertices.push(0);
         this.vertices.push(1);
     }
 
@@ -61,14 +62,6 @@
     {
         for (j = 0; j < this.slices; ++j)
         {
-/*          this.indices.push(i * this.slices + j);
-            this.indices.push((eval = (i * this.slices + j + 1) % ((i + 1) * this.slices)) == 0 ? (i * this.slices) : eval);
-            this.indices.push(i * this.slices + j + this.slices);
-
-            this.indices.push((eval = (i * this.slices + j + 1) % ((i + 1) * this.slices)) == 0 ? (i * this.slices) : eval);
-            this.indices.push((eval = (i * this.slices + j + 1 + this.slices) % ((i + 2) * this.slices)) == 0 ? ((i + 1) * this.slices) : eval);
-            this.indices.push(i * this.slices + j + this.slices); */
-
             this.indices.push(i * (this.slices + 1) + j);
             this.indices.push(i * (this.slices + 1) + j + 1);
             this.indices.push(i * (this.slices + 1) + j + this.slices + 1);
@@ -77,13 +70,16 @@
             this.indices.push(i * (this.slices + 1) + j + this.slices + 2);
             this.indices.push(i * (this.slices + 1) + j + this.slices + 1);
 
-            this.indices.push(i * (this.slices + 1) + j + this.slices + 1);
-            this.indices.push(i * (this.slices + 1) + j + this.slices + 2);
-            this.indices.push(i * (this.slices + 1) + j + 1);
+            if (this.bases == 0)
+            {
+                this.indices.push(i * (this.slices + 1) + j + this.slices + 1);
+                this.indices.push(i * (this.slices + 1) + j + this.slices + 2);
+                this.indices.push(i * (this.slices + 1) + j + 1);
 
-            this.indices.push(i * (this.slices + 1) + j + this.slices + 1);
-            this.indices.push(i * (this.slices + 1) + j + 1);
-            this.indices.push(i * (this.slices + 1) + j);
+                this.indices.push(i * (this.slices + 1) + j + this.slices + 1);
+                this.indices.push(i * (this.slices + 1) + j + 1);
+                this.indices.push(i * (this.slices + 1) + j);
+            }
         }
     }
     if (this.bases == 1)

@@ -8,8 +8,8 @@ function MySubmarine(scene) {
 	this.speed = 0.05;
 
 	this.main_body = new MyCylinder(scene, 32, 4, 0);
-	this.front_body = new MyLamp(scene, 32, 24);
-	this.rear_body = new MyLamp(scene, 32, 24);
+	this.front_body = new MyLamp(scene, 32, 4, 0);
+	this.rear_body = new MyLamp(scene, 32, 4, 0);
 	this.top_body = new MyCylinder(scene, 32, 4, 0);
 	this.propeller_left_body = new MyCylinder(scene, 32, 4, 0); // wont work as is
 	this.propeller_right_body = new MyCylinder(scene, 32, 4, 0);
@@ -39,7 +39,7 @@ MySubmarine.prototype.displaySubmarine = function () {
 
 		this.scene.pushMatrix();
 			this.scene.scale(0.73, 0.94, 0.46);
-			this.scene.rotate(180 * this.radunit, 0, 1, 0);
+			this.scene.rotate(180 * this.radunit, 1, 0, 0);
 
 			this.front_body.display();
 		this.scene.popMatrix();
@@ -98,6 +98,6 @@ MySubmarine.prototype.displaySubmarine = function () {
 
 			this.v_fin.display();
 		this.scene.popMatrix();
-		
+
 	this.scene.popMatrix();
 };

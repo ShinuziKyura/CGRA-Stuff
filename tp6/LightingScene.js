@@ -41,7 +41,7 @@ LightingScene.prototype.init = function(application) {
 	this.sub_pos_z = 8;
 	this.sub_pos_rotation = 180;
 
-	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+	this.gl.clearColor(0.0, 0.3, 0.3, 1.0);
 	this.gl.clearDepth(100.0);
 	this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
@@ -52,7 +52,7 @@ LightingScene.prototype.init = function(application) {
 	// Scene elements
 /*	this.table = new MyTable(this);
 	this.wall = new MyQuad(this, -1, 2, -0.5, 1.5);
-*/	this.floor = new MyQuad(this, 0, 10, 0, 10);
+*/	this.floor = new MyQuad(this, 0, 10000, 0, 10000);
 
 /*	this.boardA = new Plane(this, BOARD_A_DIVISIONS, -0.25, 1.25, 0, 1);
 	this.boardB = new Plane(this, BOARD_B_DIVISIONS);
@@ -319,7 +319,7 @@ LightingScene.prototype.display = function() {
 	// Floor
 	this.pushMatrix();
 		this.rotate(-90 * RADUNIT, 1, 0, 0);
-		this.scale(100, 100, 0.2);
+		this.scale(100000, 100000, 0.2);
 
 //		this.materialFloor.apply();
 		this.floorAppearance.apply();
