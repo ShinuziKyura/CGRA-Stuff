@@ -5,7 +5,36 @@ function MySubmarine(scene) {
 
 	var texture1 = "..\\resources\\images\\rust.jpg";
 
+	this.delta = 0;
+	this.lastTime = 0;
 	this.speed = 0.05;
+
+	this.periscope_up = 0;
+	this.periscope_down = 0;
+	this.periscope_height = 0;
+
+	this.pos_x = 0;
+	this.pos_y = 5;
+	this.pos_z = 10;
+
+	this.forward = 0;
+	this.back = 0;
+	this.left = 0;
+	this.right = 0;
+	this.up = 0;
+	this.down = 0;
+
+	this.h_fin_angle = 0;
+	this.v_fin_angle = 0;
+	this.prop_angle = 0;
+
+	this.v_angle = 0;
+
+	this.pos_rotation = 180;
+
+	this.speed = 0;
+	this.rotationSpeed = 1;
+	this.accel = 0.5;
 
 	this.main_body = new MyCylinder(scene, 32, 4, 0);
 	this.front_body = new MyLamp(scene, 32, 16, 0);
@@ -14,6 +43,9 @@ function MySubmarine(scene) {
 	this.top_body_base = new MyQuad(scene, 32);
 	this.propeller_left_body = new MyCylinder(scene, 32, 4, 0); // wont work as is
 	this.propeller_right_body = new MyCylinder(scene, 32, 4, 0);
+	this.periscope_main = new MyCylinder(scene, 32, 4, 0);
+	this.periscope_top = new MyCylinder(scene, 32, 4, 0);
+	this.periscope_top_base = new MyQuad(scene, 32);
 	this.h_fin = new MyPrism(scene, 4, 4, 0, 0);
 	this.v_fin = new MyPrism(scene, 4, 4, 0, 0);
 	this.top_fin = new MyPrism(scene, 4, 4, 0, 0);
@@ -33,6 +65,61 @@ function MySubmarine(scene) {
 
 MySubmarine.prototype = Object.create(CGFobject.prototype);
 MySubmarine.prototype.constructor=MySubmarine;
+
+MySubmarine.prototype.decrementPeriscopeHeight = function () {
+	if ( this.submarine.periscope_height > 0)
+		this.submarine.periscope_height -= 0.1;
+	else
+		this.submarine.periscope_height = 0;
+}
+
+MySubmarine.prototype.incrementPeriscopeHeight = function () {
+	if ( this.submarine.periscope_height < 5)
+		this.submarine.periscope_height += 1;
+	else
+		this.submarine.periscope_height = 5;
+}
+
+MySubmarine.prototype.decrementPeriscopeHeight = function () {
+	if ( this.periscope_height > 0)
+		this.periscope_height -= 0.1;
+	else
+		this.periscope_height = 0;
+};
+
+MySubmarine.prototype.incrementPeriscopeHeight = function () {
+	if ( this.periscope_height < 1)
+		this.periscope_height += 0.1;
+	else
+		this.periscope_height = 1;
+};
+
+MySubmarine.prototype.incrementVelocity = function () {
+	if (this.speed > 5)
+		this.speed = 5;
+	else
+		this.speed += this.accel;
+};
+
+MySubmarine.prototype.decrementVelocity = function () {
+	if (this.speed < -5)
+		this.speed = -5;
+	else
+		this.speed -= this.accel;
+};
+
+MySubmarine.prototype.rotateSubmarine = function(direction) {
+	// 0 -> left
+	if (direction == 0) {
+   		this.pos_rotation += 10 * this.accel;
+    	this.pos_rotation %= 360;
+	}
+	else {
+		this.pos_rotation -= 10 * this.accel;
+            if (this.pos_rotation < 0)
+                this.pos_rotation = 360 - this.speed * this.rotationSpeed;
+	}
+};
 
 MySubmarine.prototype.displaySubmarine = function () {
 
@@ -90,6 +177,7 @@ MySubmarine.prototype.displaySubmarine = function () {
 
  		// this no longer makes any sense, fuck the guy who invented this retarded implementation
 		this.scene.pushMatrix();
+			this.scene.rotate(this.h_fin_angle * this.radunit, 1, 0, 0);
 			this.scene.scale(3.28, 0.08, 0.325); // 1.64 / 0.707 / 0.707 // 0.23 * 2 * 0.707
 			this.scene.translate(-0.5, 1, 25.83);
 			this.scene.rotate(90 * this.radunit, 0, 1, 0);
@@ -99,6 +187,7 @@ MySubmarine.prototype.displaySubmarine = function () {
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
+			this.scene.rotate(this.v_fin_angle * this.radunit, 0, 1, 0);
 			this.scene.scale(0.08, 3.28, 0.325); // 1.64 / 0.707 / 0.707 // 0.23 * 2 * 0.707
 			this.scene.translate(0, 0.5, 25.83);
 			this.scene.rotate(90 * this.radunit, 1, 0, 0);
@@ -117,6 +206,7 @@ MySubmarine.prototype.displaySubmarine = function () {
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
+			this.scene.rotate(this.h_fin_angle * this.radunit, 1, 0, 0);
 			this.scene.scale(0.46, 0.113, 0.46);
 			this.scene.rotate(90 * this.radunit, 0, 1, 0);
 			this.scene.translate(-18.25, 0.708, -4.566);
@@ -125,6 +215,7 @@ MySubmarine.prototype.displaySubmarine = function () {
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
+			this.scene.rotate(this.h_fin_angle * this.radunit, 1, 0, 0);
 			this.scene.scale(0.46, 0.113, 0.46);
 			this.scene.rotate(90 * this.radunit, 0, -1, 0);
 			this.scene.translate(18.25, 0.708, -4.566);
@@ -133,6 +224,7 @@ MySubmarine.prototype.displaySubmarine = function () {
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
+			this.scene.rotate(this.v_fin_angle * this.radunit, 0, 1, 0);
 			this.scene.scale(0.113, 0.46, 0.46);
 			this.scene.rotate(90 * this.radunit, 0, 1, 0);
 			this.scene.rotate(90 * this.radunit, 1, 0, 0);
@@ -142,6 +234,7 @@ MySubmarine.prototype.displaySubmarine = function () {
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
+			this.scene.rotate(this.v_fin_angle * this.radunit, 0, 1, 0);
 			this.scene.scale(0.113, 0.46, 0.46);
 			this.scene.rotate(90 * this.radunit, 0, 1, 0);
 			this.scene.rotate(90 * this.radunit, -1, 0, 0);
@@ -167,5 +260,111 @@ MySubmarine.prototype.displaySubmarine = function () {
 			this.top_right_fin.display();
 		this.scene.popMatrix();
 
+		this.scene.pushMatrix();
+			this.scene.translate(0, 2, 2.8);
+			this.scene.rotate(90 * this.radunit, 1, 0, 0);
+			this.scene.scale(0.13, 0.13, -0.7 - this.periscope_height); // 0.57 * 1.5 // on a 1,1,2 scale
+
+			this.periscope_main.display();
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+			this.scene.translate(0, 2.6 + this.periscope_height, 2.3);
+			this.scene.scale(0.13, 0.13, .6); // 0.57 * 1.5 // on a 1,1,2 scale
+
+			this.periscope_top.display();
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+			this.scene.rotate(180 * this.radunit, 0, 1, 0);
+			this.scene.translate(0, 2.6 + this.periscope_height, -2.3);
+			this.scene.scale(0.13, 0.13, 2.6); // 0.57 * 1.5 // on a 1,1,2 scale
+
+			this.periscope_top_base.display();
+		this.scene.popMatrix();
+
 	this.scene.popMatrix();
 };
+
+MySubmarine.prototype.move = function(direction) {
+	if (direction == 'front')
+		this.forward = 1;
+	if (direction == 'back')
+		this.back = 1;
+	if (direction == 'right')
+		this.right = 1;
+	if (direction == 'left')
+		this.left = 1;
+	if (direction == 'p_up')
+		this.periscope_up = 1;
+	if (direction == 'p_down')
+		this.periscope_down = 1;
+	if (direction == 'up')
+		this.up = 1;
+	if (direction == 'down')
+		this.down = 1;
+}
+
+MySubmarine.prototype.update = function (currTime) {
+	
+	this.delta = this.delta || 0;
+	this.delta = currTime - this.lastTime;
+	this.lastTime = currTime;
+	var seconds = (this.delta / (1000));
+	
+	if (seconds > 1)
+		seconds = 0;
+
+	if (this.forward == 1) {
+		this.incrementVelocity();
+		this.forward = 0;
+	}
+	if (this.back == 1) {
+		this.decrementVelocity();
+		this.back = 0;
+	}
+	if (this.right == 1) {
+		this.rotateSubmarine(1);
+		this.right = 0;
+	}
+	if (this.left == 1) {
+		this.rotateSubmarine(0);
+		this.left = 0;
+	}
+	if (this.periscope_up == 1) {
+		this.incrementPeriscopeHeight();
+		this.periscope_up = 0;
+	}
+	if (this.periscope_down == 1) {
+		this.decrementPeriscopeHeight();
+		this.periscope_down = 0;
+	}
+	
+	if (this.right = 0 && this.left) {
+		if (this.h_fin_angle > 5)
+			this.h_fin_angle -= seconds * 1000 * this.radunit;
+		else
+			if (this.h_fin_angle < -5)
+				this.h_fin_angle += seconds * 1000 * this.radunit;
+	}
+
+	this.pos_x -= (this.speed / 10) * Math.sin(this.pos_rotation * this.radunit);
+    this.pos_z -= (this.speed / 10) * Math.cos(this.pos_rotation * this.radunit);
+    this.pos_y += Math.tan(this.v_angle) * 100 *(this.speed / 10 * seconds); 
+
+	if (this.up == 1) {
+		if (this.h_fin_angle < 45)
+			this.h_fin_angle += seconds * 10000 *this.radunit;
+		this.v_angle += this.radunit * (this.speed < 0 ? 1 : -1);
+		this.up = 0;
+	}
+
+	if (this.down == 1) {
+		if (this.h_fin_angle > -45)
+			this.h_fin_angle -= seconds * 10000 *this.radunit;
+		this.v_angle += this.radunit * (this.speed > 0 ? 1 : -1);
+		this.down = 0;
+	}
+	console.log(this.v_angle);
+};
+

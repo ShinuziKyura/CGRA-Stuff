@@ -60,7 +60,7 @@ MyInterface.prototype.init = function(application) {
 	// must be a numeric variable of the scene, initialized in scene.init
 	// min and max values can be specified as parameters
 
-	this.gui.add(this.scene, 'accel', 0, 1);
+	this.gui.add(this.scene.submarine, 'accel', 0, 1);
 
 	return true;
 };
@@ -81,19 +81,35 @@ MyInterface.prototype.processKeyboard = function(event) {
 	{
 		case (97):
 			console.log("Key 'A' pressed");
-			this.scene.rotateSubmarine(0);
+			this.scene.submarine.move('left');
             break;
         case (100):
 			console.log("Key 'D' pressed");
-			this.scene.rotateSubmarine(1);
+			this.scene.submarine.move('right');
             break;
         case (115):
     		console.log("Key 'S' pressed");
-            this.scene.decrementVelocity();
+            this.scene.submarine.move('back');
             break;
         case (119):
         	console.log("Key 'W' pressed");
-        	this.scene.incrementVelocity();
+        	this.scene.submarine.move('front');
+            break;
+        case (108):
+      		console.log("Key 'L' pressed");
+       		this.scene.submarine.move('p_down');
+       		break;
+        case (112):
+        	console.log("Key 'P' pressed");
+        	this.scene.submarine.move('p_up');
+            break;
+        case (113):
+        	console.log("Key 'Q' pressed");
+        	this.scene.submarine.move('down');
+            break;
+        case (101):
+        	console.log("Key 'E' pressed");
+        	this.scene.submarine.move('up');
             break;
 	};
 };

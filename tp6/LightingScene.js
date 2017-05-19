@@ -23,9 +23,6 @@ LightingScene.prototype.init = function(application) {
 	this.initLights();
 
 	this.AmbientLighting = true;
-	this.speed = 0;
-	this.rotationSpeed = 4;
-	this.accel = 0.5;
 
 	this.light0 = true;
 	this.light1 = false;
@@ -35,11 +32,6 @@ LightingScene.prototype.init = function(application) {
 	this.light5 = true;
 
 	this.enableClock = true;
-
-	this.sub_pos_x = 0;
-	this.sub_pos_y = 5;
-	this.sub_pos_z = 10;
-	this.sub_pos_rotation = 180;
 
 	this.gl.clearColor(0.0, 0.3, 0.3, 1.0);
 	this.gl.clearDepth(100.0);
@@ -264,21 +256,9 @@ LightingScene.prototype.updateLights = function() {
 LightingScene.prototype.update = function(currTime) {
 	if (this.enableClock)
 		this.clockpost.updateClocks(currTime);
+	
+	this.submarine.update(currTime);
 };
-
-LightingScene.prototype.rotateSubmarine = function(direction) {
-	// 0 -> left
-	if (direction == 0) {
-   		this.sub_pos_rotation += 2 * this.speed * this.rotationSpeed;
-    	this.sub_pos_rotation %= 360;
-	}
-	else {
-		this.sub_pos_rotation -= 2 * this.speed * this.rotationSpeed;
-            if (this.sub_pos_rotation < 0)
-                this.sub_pos_rotation = 360 - this.speed * this.rotationSpeed;
-	}
-
-}
 
 LightingScene.prototype.display = function() {
 	// ---- BEGIN Background, camera and axis setup
@@ -301,9 +281,6 @@ LightingScene.prototype.display = function() {
 	this.axis.display();
 
 	this.materialDefault.apply();
-
-	this.sub_pos_x -= (this.speed / 10) * Math.sin(this.sub_pos_rotation * RADUNIT);
-    this.sub_pos_z -= (this.speed / 10) * Math.cos(this.sub_pos_rotation * RADUNIT);
 
 
 	// ---- END Background, camera and axis setup
@@ -424,9 +401,9 @@ LightingScene.prototype.display = function() {
 	this.popMatrix();
 
 	this.pushMatrix();
-		this.translate(this.sub_pos_x, this.sub_pos_y, this.sub_pos_z);
+		this.translate(this.submarine.pos_x, this.submarine.pos_y, this.submarine.pos_z);
 		this.pushMatrix();
-			this.rotate(this.sub_pos_rotation * RADUNIT, 0, 1, 0);
+			this.rotate(this.submarine.pos_rotation * RADUNIT, 0, 1, 0);
 			this.AppearanceList[this.currentSubmarineTexture].apply();
 			this.submarine.displaySubmarine();
 		this.popMatrix();
@@ -434,17 +411,3 @@ LightingScene.prototype.display = function() {
 
 	// ---- END Primitive drawing section
 };
-
-LightingScene.prototype.incrementVelocity = function () {
-	if (this.speed > 5)
-		this.speed = 5;
-	else
-		this.speed += this.accel;
-}
-
-LightingScene.prototype.decrementVelocity = function () {
-	if (this.speed < -5)
-		this.speed = -5;
-	else
-		this.speed -= this.accel;
-}
