@@ -58,7 +58,7 @@ MyInterface.prototype.init = function(application) {
 	// must be a numeric variable of the scene, initialized in scene.init
 	// min and max values can be specified as parameters
 
-	this.gui.add(this.scene.submarine, 'accel', 0, 1);
+	this.gui.add(this.scene.submarine, 'maxSpeed', 0, 16.667);
 
 	return true;
 };
@@ -67,38 +67,42 @@ MyInterface.prototype.init = function(application) {
 	 // Both uppercase and lowercase use uppercase code in this function... go figure
 	switch (event.keyCode)
  	{
- 		case (65):
- 			console.log("Key 'A' pressed");
- 			this.scene.submarine.move('left');
-             break;
-         case (68):
- 			console.log("Key 'D' pressed");
- 			this.scene.submarine.move('right');
-             break;
-         case (83):
-     		console.log("Key 'S' pressed");
-             this.scene.submarine.move('back');
-             break;
-         case (87):
-         	console.log("Key 'W' pressed");
-         	this.scene.submarine.move('front');
-             break;
-         case (76):
-       		console.log("Key 'L' pressed");
-        		this.scene.submarine.move('p_down');
-        		break;
-         case (80):
-         	console.log("Key 'P' pressed");
-         	this.scene.submarine.move('p_up');
-             break;
-         case (81):
-         	console.log("Key 'Q' pressed");
-         	this.scene.submarine.move('up');
-             break;
-         case (69):
-         	console.log("Key 'E' pressed");
-         	this.scene.submarine.move('down');
-             break;
+		case (65):
+			console.log("Key 'A' pressed");
+			this.scene.submarine.move('left');
+			break;
+		case (68):
+			console.log("Key 'D' pressed");
+			this.scene.submarine.move('right');
+			break;
+		case (83):
+			console.log("Key 'S' pressed");
+			this.scene.submarine.move('back');
+			break;
+		case (87):
+			console.log("Key 'W' pressed");
+			this.scene.submarine.move('front');
+			break;
+		case (70):
+			console.log("Key 'F' pressed");
+			this.scene.activateTorpedo();
+			break;
+		case (76):
+			console.log("Key 'L' pressed");
+			this.scene.submarine.move('p_down');
+			break;
+		case (80):
+			console.log("Key 'P' pressed");
+			this.scene.submarine.move('p_up');
+			break;
+		case (81):
+			console.log("Key 'Q' pressed");
+			this.scene.submarine.move('up');
+			break;
+		case (69):
+			console.log("Key 'E' pressed");
+			this.scene.submarine.move('down');
+			break;
  	};
  }
 

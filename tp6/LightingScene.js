@@ -45,7 +45,7 @@ LightingScene.prototype.init = function(application) {
 //	this.table = new MyTable(this);
 	this.wall = new MyQuad(this, 4);
 	this.floor = new Plane(this, 10, 0, 10000, 0, 10000); // Changing the second parameter gives better image quality
-	this.target_1 = new MyTarget(this, 0, 2, 8);
+	this.targets = [new MyTarget(this, 0, 2, 4), new MyTarget(this, 11, 3, 16), new MyTarget(this, -12, 4, 24)];
 
 /*	this.boardA = new Plane(this, BOARD_A_DIVISIONS, -0.25, 1.25, 0, 1);
 	this.boardB = new Plane(this, BOARD_B_DIVISIONS);
@@ -163,7 +163,7 @@ LightingScene.prototype.init = function(application) {
 
 	this.currentSubmarineTexture = 1;
 
-	this.setUpdatePeriod(100);
+	this.setUpdatePeriod(10); // If it's superior to 16.667, the submarine animation will start to lose fluidity
 };
 
 LightingScene.prototype.doSomething = function () {
@@ -257,7 +257,7 @@ LightingScene.prototype.update = function(currTime) {
 	if (this.enableClock)
 		this.clockpost.updateClocks(currTime);
 
-	this.submarine.update(currTime);
+	this.submarine.updateSubmarine(currTime);
 };
 
 LightingScene.prototype.display = function() {
@@ -401,7 +401,8 @@ LightingScene.prototype.display = function() {
 	this.popMatrix();
 
 	this.pushMatrix();
-		this.target_1.displayTarget();
+		for (i = 0; i < this.targets.length; ++i)
+			this.targets[i].displayTarget();
 	this.popMatrix();
 
 	this.pushMatrix();
@@ -416,6 +417,11 @@ LightingScene.prototype.display = function() {
 			this.AppearanceList[this.currentSubmarineTexture].apply();
 			this.submarine.displaySubmarine();
 		this.popMatrix();
+	this.popMatrix();
+
+	this.pushMatrix();
+		if (this.torpedo_active == 1)
+			this.torpedo.displayTorpedo();
 	this.popMatrix();
 
 	// ---- END Primitive drawing section

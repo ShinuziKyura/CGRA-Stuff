@@ -3,7 +3,7 @@
  * Not suitable for use elsewhere
  */
 
-function MySubmarineFin(scene, immovable_fin) {
+function MySubmarineFin(scene, immovable_fin = 0) {
 	CGFobject.call(this, scene);
 
     this.radunit = Math.PI / 180.0;
@@ -61,7 +61,7 @@ MySubmarineFin.prototype.displayFin = function () {
         {
             this.scene.scale(0.46, 0.113, 0.46);
             this.scene.rotate(90 * this.radunit, 0, -1, 0);
-            this.scene.translate(0, 0, -8);
+            this.scene.translate(0, 0, -8.13);
         }
 
         this.right_fin.display();
