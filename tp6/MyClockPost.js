@@ -29,24 +29,24 @@ function MyClockPost(scene) {
 	this.clock4 = new MyClock(scene);
     this.body1 = new MyPrism(scene, 4, 1, 0.2);
     this.body2 = new MyPrism(scene, 4, 1, 0.8);
-    this.body3 = new MyCylinder(scene, 32, 1, 0);
+    this.body3 = new MyCylinder(scene, 32, 1, 0, 0);
     this.body4 = new MyCylinder(scene, 32, 1);
     this.body5 = new MyCylinder(scene, 32, 1);
     this.body6 = new MyCylinder(scene, 32, 1);
     this.body7 = new MyCylinder(scene, 32, 1);
-	this.body8 = new MyLamp(scene, 32, 16);
-	this.body9 = new MyLamp(scene, 32, 16);
-	this.body10 = new MyLamp(scene, 32, 16);
-	this.body11 = new MyLamp(scene, 32, 16);
+	this.body8 = new MyLamp(scene, 32, 16, 0);
+	this.body9 = new MyLamp(scene, 32, 16, 0);
+	this.body10 = new MyLamp(scene, 32, 16, 0);
+	this.body11 = new MyLamp(scene, 32, 16, 0);
     this.body12 = new MyPrism(scene, 4, 1, 0.2, 0);
     this.body13 = new MyCylinder(scene, 32, 1);
     this.body14 = new MyCylinder(scene, 32, 1);
     this.body15 = new MyCylinder(scene, 32, 1);
     this.body16 = new MyCylinder(scene, 32, 1);
-	this.body17 = new MyLamp(scene, 32, 16);
-	this.body18 = new MyLamp(scene, 32, 16);
-	this.body19 = new MyLamp(scene, 32, 16);
-	this.body20 = new MyLamp(scene, 32, 16);
+	this.body17 = new MyLamp(scene, 32, 16, 0);
+	this.body18 = new MyLamp(scene, 32, 16, 0);
+	this.body19 = new MyLamp(scene, 32, 16, 0);
+	this.body20 = new MyLamp(scene, 32, 16, 0);
 }
 
 MyClockPost.prototype = Object.create(CGFobject.prototype);

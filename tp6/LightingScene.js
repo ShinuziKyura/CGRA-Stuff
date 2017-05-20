@@ -45,12 +45,12 @@ LightingScene.prototype.init = function(application) {
 //	this.table = new MyTable(this);
 	this.wall = new MyQuad(this, 4);
 	this.floor = new Plane(this, 10, 0, 10000, 0, 10000); // Changing the second parameter gives better image quality
+	this.target_1 = new MyTarget(this, 0, 2, 8);
 
 /*	this.boardA = new Plane(this, BOARD_A_DIVISIONS, -0.25, 1.25, 0, 1);
 	this.boardB = new Plane(this, BOARD_B_DIVISIONS);
 
-*/	this.prism = new MyPrism(this, 4, 1, 0.5);
-/*	this.cylinder = new MyCylinder(this, 8, 20);
+	this.cylinder = new MyCylinder(this, 8, 20);
 	this.semisphere = new MyLamp(this, 32, 32);
 */	this.clockpost = new MyClockPost(this);
 
@@ -256,7 +256,7 @@ LightingScene.prototype.updateLights = function() {
 LightingScene.prototype.update = function(currTime) {
 	if (this.enableClock)
 		this.clockpost.updateClocks(currTime);
-	
+
 	this.submarine.update(currTime);
 };
 
@@ -401,8 +401,16 @@ LightingScene.prototype.display = function() {
 	this.popMatrix();
 
 	this.pushMatrix();
+		this.target_1.displayTarget();
+	this.popMatrix();
+
+	this.pushMatrix();
 		this.translate(this.submarine.pos_x, this.submarine.pos_y, this.submarine.pos_z);
 		this.pushMatrix();
+			// Corrects the rotation axis
+			// Increment k in k * -Math.sin(sub_rotation) and k * -Math.cos(sub_rotation) to drag the axis to the tail of the submarine
+			this.translate(5 * -Math.sin(this.submarine.pos_rotation * RADUNIT), 0, 5 * -Math.cos(this.submarine.pos_rotation * RADUNIT));
+			// Rotates the submarine
 			this.rotate(this.submarine.pos_rotation * RADUNIT, 0, 1, 0);
 			this.AppearanceList[this.currentSubmarineTexture].apply();
 			this.submarine.displaySubmarine();

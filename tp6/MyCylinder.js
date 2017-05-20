@@ -2,11 +2,12 @@
  * MyCylinder
  * @constructor
  */
- function MyCylinder(scene, slices, stacks, bases = 1) {
+ function MyCylinder(scene, slices, stacks, stack_offset = 0, bases = 1) {
  	CGFobject.call(this,scene);
 
 	this.slices = slices;
 	this.stacks = stacks;
+    this.stack_offset = stack_offset;
     this.bases = bases;
 
  	this.initBuffers();
@@ -18,7 +19,10 @@
     var deg_rad = Math.PI / 180;
 
     var angle = 360.0 / this.slices;
+
     var base_vertice = (this.slices + 1) * (this.stacks + 1);
+
+    var delta_offset = this.stack_offset / this.stacks;
 
     var texCoordS = 1 / this.slices;
     var texCoordT = 1 / this.stacks;
@@ -30,8 +34,8 @@
     {
         for (j = 0; j <= this.slices; ++j)
         {
-            this.vertices.push(Math.cos(deg_rad * j * angle));
-            this.vertices.push(Math.sin(deg_rad * j * angle));
+            this.vertices.push(Math.cos(deg_rad * j * angle) - Math.cos(deg_rad * j * angle) * i * delta_offset);
+            this.vertices.push(Math.sin(deg_rad * j * angle) - Math.sin(deg_rad * j * angle) * i * delta_offset);
             this.vertices.push(i / this.stacks);
         }
     }
@@ -45,8 +49,8 @@
         }
         for (i = 0; i < this.slices; ++i)
         {
-            this.vertices.push(Math.cos(deg_rad * i * angle));
-            this.vertices.push(Math.sin(deg_rad * i * angle));
+            this.vertices.push(Math.cos(deg_rad * i * angle) - Math.cos(deg_rad * i * angle) * this.stack_offset);
+            this.vertices.push(Math.sin(deg_rad * i * angle) - Math.sin(deg_rad * i * angle) * this.stack_offset);
             this.vertices.push(1);
         }
         this.vertices.push(0);

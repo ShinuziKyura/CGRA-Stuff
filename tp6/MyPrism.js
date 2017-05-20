@@ -22,9 +22,9 @@
     var angle = 360.0 / this.slices;
     var normal_angle = angle / 2;
 
-    var delta_offset = this.stack_offset / this.stacks;
-
     var base_vertice = 2 * this.slices * (this.stacks + 1);
+
+    var delta_offset = this.stack_offset / this.stacks;
 
     var texCoordS = 1 / this.slices;
     var texCoordT = 1 / this.stacks;

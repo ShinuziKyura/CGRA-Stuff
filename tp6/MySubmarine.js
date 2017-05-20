@@ -13,9 +13,9 @@ function MySubmarine(scene) {
 	this.periscope_down = 0;
 	this.periscope_height = 0;
 
-	this.pos_x = 0;
+	this.pos_x = -10;
 	this.pos_y = 5;
-	this.pos_z = 10;
+	this.pos_z = 0;
 
 	this.forward = 0;
 	this.back = 0;
@@ -33,18 +33,20 @@ function MySubmarine(scene) {
 	this.pos_rotation = 180;
 
 	this.speed = 0;
-	this.rotationSpeed = 1;
+	this.rotation_speed = 0;
+	this.last_rotation = -1;
+	this.total_accel = 0;
 	this.accel = 0.5;
 
-	this.main_body = new MyCylinder(scene, 32, 4, 0);
+	this.main_body = new MyCylinder(scene, 32, 4, 0, 0);
 	this.front_body = new MyLamp(scene, 32, 16, 0);
 	this.rear_body = new MyLamp(scene, 32, 16, 0);
-	this.top_body = new MyCylinder(scene, 32, 4, 0);
+	this.top_body = new MyCylinder(scene, 32, 4, 0, 0);
 	this.top_body_base = new MyQuad(scene, 32);
-	this.propeller_left_body = new MyCylinder(scene, 32, 4, 0); // wont work as is
-	this.propeller_right_body = new MyCylinder(scene, 32, 4, 0);
-	this.periscope_main = new MyCylinder(scene, 32, 4, 0);
-	this.periscope_top = new MyCylinder(scene, 32, 4, 0);
+	this.propeller_left_body = new MyCylinder(scene, 32, 4, 0, 0); // wont work as is
+	this.propeller_right_body = new MyCylinder(scene, 32, 4, 0, 0);
+	this.periscope_main = new MyCylinder(scene, 32, 4, 0, 0);
+	this.periscope_top = new MyCylinder(scene, 32, 4, 0, 0);
 	this.periscope_top_base = new MyQuad(scene, 32);
 	this.h_fin = new MyPrism(scene, 4, 4, 0, 0);
 	this.v_fin = new MyPrism(scene, 4, 4, 0, 0);
@@ -65,61 +67,6 @@ function MySubmarine(scene) {
 
 MySubmarine.prototype = Object.create(CGFobject.prototype);
 MySubmarine.prototype.constructor=MySubmarine;
-
-MySubmarine.prototype.decrementPeriscopeHeight = function () {
-	if ( this.submarine.periscope_height > 0)
-		this.submarine.periscope_height -= 0.1;
-	else
-		this.submarine.periscope_height = 0;
-}
-
-MySubmarine.prototype.incrementPeriscopeHeight = function () {
-	if ( this.submarine.periscope_height < 5)
-		this.submarine.periscope_height += 1;
-	else
-		this.submarine.periscope_height = 5;
-}
-
-MySubmarine.prototype.decrementPeriscopeHeight = function () {
-	if ( this.periscope_height > 0)
-		this.periscope_height -= 0.1;
-	else
-		this.periscope_height = 0;
-};
-
-MySubmarine.prototype.incrementPeriscopeHeight = function () {
-	if ( this.periscope_height < 1)
-		this.periscope_height += 0.1;
-	else
-		this.periscope_height = 1;
-};
-
-MySubmarine.prototype.incrementVelocity = function () {
-	if (this.speed > 5)
-		this.speed = 5;
-	else
-		this.speed += this.accel;
-};
-
-MySubmarine.prototype.decrementVelocity = function () {
-	if (this.speed < -5)
-		this.speed = -5;
-	else
-		this.speed -= this.accel;
-};
-
-MySubmarine.prototype.rotateSubmarine = function(direction) {
-	// 0 -> left
-	if (direction == 0) {
-   		this.pos_rotation += 10 * this.accel;
-    	this.pos_rotation %= 360;
-	}
-	else {
-		this.pos_rotation -= 10 * this.accel;
-            if (this.pos_rotation < 0)
-                this.pos_rotation = 360 - this.speed * this.rotationSpeed;
-	}
-};
 
 MySubmarine.prototype.displaySubmarine = function () {
 
@@ -175,7 +122,6 @@ MySubmarine.prototype.displaySubmarine = function () {
 			this.propeller_right_body.display();
 		this.scene.popMatrix();
 
- 		// this no longer makes any sense, fuck the guy who invented this retarded implementation
 		this.scene.pushMatrix();
 			this.scene.rotate(this.h_fin_angle * this.radunit, 1, 0, 0);
 			this.scene.scale(3.28, 0.08, 0.325); // 1.64 / 0.707 / 0.707 // 0.23 * 2 * 0.707
@@ -285,6 +231,61 @@ MySubmarine.prototype.displaySubmarine = function () {
 
 	this.scene.popMatrix();
 };
+/* // Repeated periscope functions
+MySubmarine.prototype.decrementPeriscopeHeight = function () {
+	if ( this.submarine.periscope_height > 0)
+		this.submarine.periscope_height -= 0.1;
+	else
+		this.submarine.periscope_height = 0;
+}
+
+MySubmarine.prototype.incrementPeriscopeHeight = function () {
+	if ( this.submarine.periscope_height < 5)
+		this.submarine.periscope_height += 1;
+	else
+		this.submarine.periscope_height = 5;
+}
+*/
+MySubmarine.prototype.decrementPeriscopeHeight = function () {
+	if ( this.periscope_height > 0)
+		this.periscope_height -= 0.1;
+	else
+		this.periscope_height = 0;
+};
+
+MySubmarine.prototype.incrementPeriscopeHeight = function () {
+	if ( this.periscope_height < 1)
+		this.periscope_height += 0.1;
+	else
+		this.periscope_height = 1;
+};
+
+MySubmarine.prototype.incrementAcceleration = function () {
+	if (this.total_accel > 5)
+		this.total_accel = 5;
+	else
+		this.total_accel += this.accel;
+};
+
+MySubmarine.prototype.decrementAcceleration = function () {
+	if (this.total_accel < -5)
+		this.total_accel = -5;
+	else
+		this.total_accel -= this.accel;
+};
+
+MySubmarine.prototype.rotateSubmarine = function(direction) {
+	// 0 -> left
+	if (direction == 0) {
+   		this.pos_rotation += Math.sin(this.rotation_speed * this.radunit) * 10;
+    	this.pos_rotation %= 360;
+	}
+	else {
+		this.pos_rotation -= Math.sin(this.rotation_speed * this.radunit) * 10;
+        if (this.pos_rotation < 0)
+			this.pos_rotation += 360;
+	}
+};
 
 MySubmarine.prototype.move = function(direction) {
 	if (direction == 'front')
@@ -305,42 +306,77 @@ MySubmarine.prototype.move = function(direction) {
 		this.down = 1;
 }
 
+MySubmarine.prototype.stop = function(direction) {
+	if (direction == 'front')
+		this.forward = 0;
+	if (direction == 'back')
+		this.back = 0;
+	if (direction == 'right')
+		this.right = 0;
+	if (direction == 'left')
+		this.left = 0;
+	if (direction == 'p_up')
+		this.periscope_up = 0;
+	if (direction == 'p_down')
+		this.periscope_down = 0;
+	if (direction == 'up')
+		this.up = 0;
+	if (direction == 'down')
+		this.down = 0;
+}
+
 MySubmarine.prototype.update = function (currTime) {
-	
-	this.delta = this.delta || 0;
 	this.delta = currTime - this.lastTime;
 	this.lastTime = currTime;
 	var seconds = (this.delta / (1000));
-	
+
 	if (seconds > 1)
 		seconds = 0;
 
 	if (this.forward == 1) {
-		this.incrementVelocity();
-		this.forward = 0;
+		this.incrementAcceleration();
 	}
 	if (this.back == 1) {
-		this.decrementVelocity();
-		this.back = 0;
-	}
-	if (this.right == 1) {
-		this.rotateSubmarine(1);
-		this.right = 0;
+		this.decrementAcceleration();
 	}
 	if (this.left == 1) {
-		this.rotateSubmarine(0);
-		this.left = 0;
+		this.rotation_speed += 1;
+		this.last_rotation = 0;
+		this.rotateSubmarine(this.last_rotation);
+	}
+	if (this.right == 1) {
+		this.rotation_speed += 1;
+		this.last_rotation = 1;
+		this.rotateSubmarine(this.last_rotation);
 	}
 	if (this.periscope_up == 1) {
 		this.incrementPeriscopeHeight();
-		this.periscope_up = 0;
 	}
 	if (this.periscope_down == 1) {
 		this.decrementPeriscopeHeight();
-		this.periscope_down = 0;
 	}
-	
-	if (this.right = 0 && this.left) {
+	if (this.right == 0 && this.left == 0 && this.rotation_speed > 0)
+	{
+		this.rotation_speed -= 1;
+		this.rotateSubmarine(this.last_rotation);
+	}
+	if (this.forward == 0 && this.back == 0 && this.total_accel != 0) {
+		this.total_accel = 0;
+	}
+
+	this.speed += this.total_accel / this.delta;
+	if (this.speed > 5)
+		this.speed = 5;
+	if (this.speed < -5)
+		this.speed = -5;
+	if (this.total_accel == 0 && this.speed != 0)
+	{
+		this.speed -= (this.speed / 100.0);
+		if (this.speed < 0.01 && this.speed > -0.01)
+			this.speed = 0;
+	}
+
+	if (this.left == 1 && this.right == 0) {
 		if (this.h_fin_angle > 5)
 			this.h_fin_angle -= seconds * 1000 * this.radunit;
 		else
@@ -348,9 +384,9 @@ MySubmarine.prototype.update = function (currTime) {
 				this.h_fin_angle += seconds * 1000 * this.radunit;
 	}
 
-	this.pos_x -= (this.speed / 10) * Math.sin(this.pos_rotation * this.radunit);
-    this.pos_z -= (this.speed / 10) * Math.cos(this.pos_rotation * this.radunit);
-    this.pos_y += Math.tan(this.v_angle) * 100 *(this.speed / 10 * seconds); 
+	this.pos_x += (this.speed / 5) * -Math.sin(this.pos_rotation * this.radunit);
+    this.pos_z += (this.speed / 5) * -Math.cos(this.pos_rotation * this.radunit);
+    this.pos_y += Math.tan(this.v_angle) * 100 *(this.speed / 10 * seconds);
 
 	if (this.up == 1) {
 		if (this.h_fin_angle < 45)
@@ -367,4 +403,3 @@ MySubmarine.prototype.update = function (currTime) {
 	}
 	console.log(this.v_angle);
 };
-
