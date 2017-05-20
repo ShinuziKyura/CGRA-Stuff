@@ -16,6 +16,7 @@ serialInclude([
 	'MyClock.js',
 	'MyClockHand.js',
 	'MySubmarine.js',
+	'MySubmarineFin.js',
 	'MyClockPost.js',
 	'MyTrapezoid.js',
 	'MyTarget.js',

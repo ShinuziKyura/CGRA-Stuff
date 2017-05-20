@@ -93,11 +93,11 @@ MyInterface.prototype.init = function(application) {
              break;
          case (81):
          	console.log("Key 'Q' pressed");
-         	this.scene.submarine.move('down');
+         	this.scene.submarine.move('up');
              break;
          case (69):
          	console.log("Key 'E' pressed");
-         	this.scene.submarine.move('up');
+         	this.scene.submarine.move('down');
              break;
  	};
  }
@@ -131,11 +131,11 @@ MyInterface.prototype.init = function(application) {
  			break;
  		case (81):
  		   console.log("Key 'Q' released");
- 		   this.scene.submarine.stop('down');
+ 		   this.scene.submarine.stop('up');
  			break;
  		case (69):
  		   console.log("Key 'E' released");
- 		   this.scene.submarine.stop('up');
+ 		   this.scene.submarine.stop('down');
  			break;
     };
  }

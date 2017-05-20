@@ -412,6 +412,7 @@ LightingScene.prototype.display = function() {
 			this.translate(5 * -Math.sin(this.submarine.pos_rotation * RADUNIT), 0, 5 * -Math.cos(this.submarine.pos_rotation * RADUNIT));
 			// Rotates the submarine
 			this.rotate(this.submarine.pos_rotation * RADUNIT, 0, 1, 0);
+			this.rotate(this.submarine.pos_angle * RADUNIT, 1, 0, 0);
 			this.AppearanceList[this.currentSubmarineTexture].apply();
 			this.submarine.displaySubmarine();
 		this.popMatrix();
