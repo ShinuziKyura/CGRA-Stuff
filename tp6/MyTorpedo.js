@@ -31,6 +31,7 @@ MyTorpedo.prototype.constructor = MyTorpedo;
 
 MyTorpedo.prototype.displayTorpedo = function () {
     this.scene.translate(this.pos_x, this.pos_y, this.pos_z);
+    this.scene.AppearanceList[1].apply();
 	this.scene.pushMatrix();
 		this.scene.rotate(this.pos_rotation, 0, 1, 0);
 		this.scene.rotate(this.pos_angle, 1, 0, 0);

@@ -9,6 +9,20 @@ function MyClockPost(scene) {
     this.bodyAppearance.setSpecular(0.3,0.3,0.3,1);
     this.bodyAppearance.setShininess(50);
 
+	this.stoneAppearance = new CGFappearance(scene);
+	this.stoneAppearance.setAmbient(0,0,0,1);
+	this.stoneAppearance.setDiffuse(0.9,0.9,0.9,1);
+	this.stoneAppearance.setSpecular(0.3,0.3,0.3,1);
+	this.stoneAppearance.setShininess(50);
+	this.stoneAppearance.loadTexture("..\\resources\\images\\post_stone.jpg");
+
+	this.woodAppearance = new CGFappearance(scene);
+	this.woodAppearance.setAmbient(0,0,0,1);
+	this.woodAppearance.setDiffuse(0.9,0.9,0.9,1);
+	this.woodAppearance.setSpecular(0.3,0.3,0.3,1);
+	this.woodAppearance.setShininess(50);
+	this.woodAppearance.loadTexture("..\\resources\\images\\post_wood.jpg");
+
 	this.body1Appearance = new CGFappearance(scene);
 	this.body1Appearance.setAmbient(0,0,0,1);
 	this.body1Appearance.setDiffuse(0.9,0.9,0.9,1);
@@ -27,26 +41,27 @@ function MyClockPost(scene) {
     this.clock2 = new MyClock(scene);
     this.clock3 = new MyClock(scene);
 	this.clock4 = new MyClock(scene);
-    this.body1 = new MyPrism(scene, 4, 1, 0.2);
-    this.body2 = new MyPrism(scene, 4, 1, 0.8);
-    this.body3 = new MyCylinder(scene, 32, 1, 0, 0);
-    this.body4 = new MyCylinder(scene, 32, 1);
-    this.body5 = new MyCylinder(scene, 32, 1);
-    this.body6 = new MyCylinder(scene, 32, 1);
-    this.body7 = new MyCylinder(scene, 32, 1);
+    this.body1 = new MyPrism(scene, 4, 1, 0.2, 0);
+    this.body2 = new MyPrism(scene, 4, 1, 0.8, 0);
+    this.body3 = new MyCylinder(scene, 32, 4, 0, 0);
+    this.body4 = new MyCylinder(scene, 32, 4, 0, 0);
+    this.body5 = new MyCylinder(scene, 32, 4, 0, 0);
+    this.body6 = new MyCylinder(scene, 32, 4, 0, 0);
+    this.body7 = new MyCylinder(scene, 32, 4, 0, 0);
 	this.body8 = new MyLamp(scene, 32, 16, 0);
 	this.body9 = new MyLamp(scene, 32, 16, 0);
 	this.body10 = new MyLamp(scene, 32, 16, 0);
 	this.body11 = new MyLamp(scene, 32, 16, 0);
     this.body12 = new MyPrism(scene, 4, 1, 0.2, 0);
-    this.body13 = new MyCylinder(scene, 32, 1);
-    this.body14 = new MyCylinder(scene, 32, 1);
-    this.body15 = new MyCylinder(scene, 32, 1);
-    this.body16 = new MyCylinder(scene, 32, 1);
+    this.body13 = new MyCylinder(scene, 32, 4, 0, 0);
+    this.body14 = new MyCylinder(scene, 32, 4, 0, 0);
+    this.body15 = new MyCylinder(scene, 32, 4, 0, 0);
+    this.body16 = new MyCylinder(scene, 32, 4, 0, 0);
 	this.body17 = new MyLamp(scene, 32, 16, 0);
 	this.body18 = new MyLamp(scene, 32, 16, 0);
 	this.body19 = new MyLamp(scene, 32, 16, 0);
 	this.body20 = new MyLamp(scene, 32, 16, 0);
+	this.body_top = new MyQuad(scene, 32);
 }
 
 MyClockPost.prototype = Object.create(CGFobject.prototype);
@@ -59,7 +74,7 @@ MyClockPost.prototype.displayClockPost = function () {
         this.scene.pushMatrix();
             this.scene.scale(1.5, 1.5, 1.5);
 
-			this.bodyAppearance.apply();
+			this.stoneAppearance.apply();
             this.body1.display();
         this.scene.popMatrix();
 
@@ -67,7 +82,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.translate(0, 0, 1.5);
             this.scene.scale(1.2, 1.2, 0.5);
 
-			this.bodyAppearance.apply();
+			this.stoneAppearance.apply();
             this.body2.display();
         this.scene.popMatrix();
 
@@ -75,8 +90,17 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.translate(0, 0, 2);
             this.scene.scale(0.2, 0.2, 6);
 
-			this.body1Appearance.apply();
+			this.woodAppearance.apply();
             this.body3.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+			this.scene.translate(0, 0, 10.1);
+            this.scene.scale(1.15, 1.15, .3);
+            this.scene.rotate(45 * this.radunit, 0, 0, 1);
+
+			this.woodAppearance.apply();
+            this.body_top.display();
         this.scene.popMatrix();
 
 		this.scene.pushMatrix();
@@ -84,7 +108,7 @@ MyClockPost.prototype.displayClockPost = function () {
             this.scene.scale(0.2, 1.6, 0.2);
 			this.scene.rotate(90 * this.radunit, 1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[1].apply();
             this.body4.display();
         this.scene.popMatrix();
 
@@ -93,7 +117,8 @@ MyClockPost.prototype.displayClockPost = function () {
             this.scene.scale(1.6, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, 0, 1, 0);
 
-			this.bodyAppearance.apply();
+			//this.scene.AppearanceList[1].apply();
+			this.scene.AppearanceList[1].apply();
             this.body5.display();
         this.scene.popMatrix();
 
@@ -102,7 +127,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.scale(0.2, 1.6, 0.2);
 			this.scene.rotate(90 * this.radunit, 1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[1].apply();
 			this.body6.display();
 		this.scene.popMatrix();
 
@@ -111,7 +136,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.scale(1.6, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, 0, 1, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[1].apply();
 			this.body7.display();
 		this.scene.popMatrix();
 
@@ -120,7 +145,7 @@ MyClockPost.prototype.displayClockPost = function () {
             this.scene.scale(0.2, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, 1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[2].apply();
             this.body8.display();
         this.scene.popMatrix();
 
@@ -129,7 +154,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.scale(0.2, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, -1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[2].apply();
 			this.body9.display();
 		this.scene.popMatrix();
 
@@ -138,7 +163,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.scale(0.2, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, 1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[2].apply();
 			this.body10.display();
 		this.scene.popMatrix();
 
@@ -147,7 +172,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.scale(0.2, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, -1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[2].apply();
 			this.body11.display();
 		this.scene.popMatrix();
 
@@ -157,7 +182,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.rotate(45 * this.radunit, 0, 0, 1);
 			this.scene.rotate(180 * this.radunit, 0, 1, 0);
 
-			this.body2Appearance.apply();
+			this.woodAppearance.apply();
 			this.body12.display();
 		this.scene.popMatrix();
 
@@ -166,7 +191,7 @@ MyClockPost.prototype.displayClockPost = function () {
             this.scene.scale(0.2, 2, 0.2);
 			this.scene.rotate(90 * this.radunit, 1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[1].apply();
             this.body13.display();
         this.scene.popMatrix();
 
@@ -175,7 +200,7 @@ MyClockPost.prototype.displayClockPost = function () {
             this.scene.scale(2, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, 0, 1, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[1].apply();
             this.body14.display();
         this.scene.popMatrix();
 
@@ -184,7 +209,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.scale(0.2, 2, 0.2);
 			this.scene.rotate(90 * this.radunit, 1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[1].apply();
 			this.body15.display();
 		this.scene.popMatrix();
 
@@ -193,7 +218,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.scale(2, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, 0, 1, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[1].apply();
 			this.body16.display();
 		this.scene.popMatrix();
 
@@ -202,7 +227,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.scale(0.2, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, 1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[2].apply();
 			this.body17.display();
 		this.scene.popMatrix();
 
@@ -211,7 +236,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.scale(0.2, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, -1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[2].apply();
 			this.body18.display();
 		this.scene.popMatrix();
 
@@ -220,7 +245,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.scale(0.2, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, 1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[2].apply();
 			this.body19.display();
 		this.scene.popMatrix();
 
@@ -229,7 +254,7 @@ MyClockPost.prototype.displayClockPost = function () {
 			this.scene.scale(0.2, 0.2, 0.2);
 			this.scene.rotate(90 * this.radunit, -1, 0, 0);
 
-			this.bodyAppearance.apply();
+			this.scene.AppearanceList[2].apply();
 			this.body20.display();
 		this.scene.popMatrix();
 

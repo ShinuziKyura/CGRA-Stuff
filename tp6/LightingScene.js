@@ -77,12 +77,20 @@ LightingScene.prototype.init = function(application) {
 	this.sub2Appearance.setShininess(50);
 	this.sub2Appearance.loadTexture("..\\resources\\images\\metal.jpg");
 
+	this.sub3Appearance = new CGFappearance(this);
+	this.sub3Appearance.setAmbient(0,0,0,1);
+	this.sub3Appearance.setDiffuse(0.9,0.9,0.9,1);
+	this.sub3Appearance.setSpecular(0.3,0.3,0.3,1);
+	this.sub3Appearance.setShininess(50);
+	this.sub3Appearance.loadTexture("..\\resources\\images\\yellow.jpg");
+
 	this.submarineAppearances ={
 		"Rusted" : 0,
-		"Metal" : 1
+		"Metal" : 1,
+		"Yellow Bomb" : 2
 	};
 
-	this.AppearanceList = new Array(this.sub1Appearance, this.sub2Appearance);
+	this.AppearanceList = new Array(this.sub1Appearance, this.sub2Appearance, this.sub3Appearance);
 
 	this.currentSubmarineTexture = 1;
 
