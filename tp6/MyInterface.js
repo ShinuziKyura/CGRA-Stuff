@@ -58,7 +58,7 @@ MyInterface.prototype.init = function(application) {
 	// must be a numeric variable of the scene, initialized in scene.init
 	// min and max values can be specified as parameters
 
-	this.gui.add(this.scene.submarine, 'maxSpeed', 0, 16.667);
+	this.gui.add(this.scene.submarine, 'maxSpeed', 1, 16.667);
 
 	return true;
 };
@@ -85,7 +85,7 @@ MyInterface.prototype.init = function(application) {
 			break;
 		case (70):
 			console.log("Key 'F' pressed");
-			this.scene.activateTorpedo();
+			this.scene.submarine.activateTorpedo();
 			break;
 		case (76):
 			console.log("Key 'L' pressed");

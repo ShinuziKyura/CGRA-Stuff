@@ -55,6 +55,8 @@ LightingScene.prototype.init = function(application) {
 */	this.clockpost = new MyClockPost(this);
 
 	this.submarine = new MySubmarine(this);
+	this.torpedo;
+	this.torpedo_active = 0;
 
 	// Materials
 	this.materialDefault = new CGFappearance(this);

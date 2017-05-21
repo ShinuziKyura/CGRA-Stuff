@@ -54,8 +54,10 @@ function MySubmarine(scene) {
 	this.h_fin = new MySubmarineFin(scene, 0);
 	this.v_fin = new MySubmarineFin(scene, 0);
 	this.top_fin = new MySubmarineFin(scene, 1);
-	this.propeller_left = new MyPrism(scene, 4, 4, 0, 0);
-	this.propeller_right = new MyPrism(scene, 4, 4, 0, 0);
+	this.propeller_left = new MySubmarineFin(scene, 0);
+	this.propeller_right = new MySubmarineFin(scene, 0);
+	this.propeller_counter_left = new MySubmarineFin(scene, 0);
+	this.propeller_counter_right = new MySubmarineFin(scene, 0);
 	this.propeller_left_axis = new MyLamp(scene, 32, 16, 0);
 	this.propeller_right_axis = new MyLamp(scene, 32, 16, 0);
 
@@ -171,25 +173,53 @@ MySubmarine.prototype.displaySubmarine = function () {
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
-			
-			//this.scene.translate(-1.05, -.5, 7.95);
-			this.scene.translate(-1.15, -.48, 7.95);
-			this.scene.scale(.2, .5, .01); // 0.57 * 1.5 // on a 1,1,2 scale
-			this.scene.rotate(45 * this.radunit, 0, 0, 1);
-			this.scene.rotate(90 * this.radunit, 1, 1, 0);
-			this.propeller_left.display();
+			this.scene.translate(-1.05, -.5, 7.95);
+			this.scene.rotate(90 * this.radunit, 1, 0, 0);
+			this.scene.pushMatrix();
+				this.scene.rotate(this.prop_angle * this.radunit, 0, 1, 0);
+				this.scene.scale(0.1, 0.3, .3);
+
+				this.propeller_left.displayFin();
+			this.scene.popMatrix();
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
-			this.scene.translate(.96, -.48, 7.95);
-			this.scene.scale(.2, .5, .01); // 0.57 * 1.5 // on a 1,1,2 scale
-			this.scene.rotate(45 * this.radunit, 0, 0, 1);
-			this.scene.rotate(90 * this.radunit, 1, 1, 0);
-			this.propeller_right.display();
+			this.scene.translate(-1.05, -.5, 7.95);
+			this.scene.rotate(90 * this.radunit, -1, 0, 0);
+			this.scene.rotate(180 * this.radunit, 0, 0, 1);
+			this.scene.pushMatrix();
+				this.scene.rotate(this.prop_angle * this.radunit, 0, 1, 0);
+				this.scene.scale(0.1, 0.3, .3);
+
+				this.propeller_counter_left.displayFin();
+			this.scene.popMatrix();
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
-			
+			this.scene.translate(1.05, -.5, 7.95);
+			this.scene.rotate(90 * this.radunit, 1, 0, 0);
+			this.scene.pushMatrix();
+				this.scene.rotate(this.prop_angle * this.radunit, 0, 1, 0);
+				this.scene.scale(0.1, 0.3, 0.3);
+
+				this.propeller_right.displayFin();
+			this.scene.popMatrix();
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+			this.scene.translate(1.05, -.5, 7.95);
+			this.scene.rotate(90 * this.radunit, -1, 0, 0);
+			this.scene.rotate(180 * this.radunit, 0, 0, 1);
+			this.scene.pushMatrix();
+				this.scene.rotate(this.prop_angle * this.radunit, 0, 1, 0);
+				this.scene.scale(0.1, 0.3, .3);
+
+				this.propeller_counter_right.displayFin();
+			this.scene.popMatrix();
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+
 			this.scene.translate(1.05, -.5, 7.95);
 			this.scene.scale(.09, .09, .09); // 0.57 * 1.5 // on a 1,1,2 scale
 			this.scene.rotate(180 * this.radunit, 0, 1, 0);
@@ -197,7 +227,7 @@ MySubmarine.prototype.displaySubmarine = function () {
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
-			
+
 			this.scene.translate(-1.05, -.5, 7.95);
 			this.scene.scale(.09, .09, .09); // 0.57 * 1.5 // on a 1,1,2 scale
 			this.scene.rotate(180 * this.radunit, 0, 1, 0);
@@ -431,7 +461,7 @@ MySubmarine.prototype.updateSubmarine = function (currTime) { // fuse with displ
 		if (this.accel == 0 && this.speed != 0)
 		{
 //			this.speed -= (this.speed / 10.0); // Comment this line to obtain asked functionality
-			if (this.speed < 0.1 && this.speed > -0.1)
+			if (this.speed < 0.001 && this.speed > -0.001)
 				this.speed = 0;
 		}
 
@@ -441,6 +471,7 @@ MySubmarine.prototype.updateSubmarine = function (currTime) { // fuse with displ
 
 		this.h_fin_angle = -this.pos_angle;
 		this.v_fin_angle = 30 * Math.sin(this.rotation_speed_left * this.radunit) - 30 * Math.sin(this.rotation_speed_right * this.radunit);
+		this.prop_angle = (this.prop_angle + this.speed * 6) % 360;
 
 		var min_index;
 		var min_dist = MAX_DISTANCE;
@@ -453,13 +484,11 @@ MySubmarine.prototype.updateSubmarine = function (currTime) { // fuse with displ
 				min_index = i;
 				min_dist = tmp_dist;
 			}
-		this.target = this.scene.targets[i];
+		this.target = this.scene.targets[min_index];
 		this.target_distance = Math.sqrt(min_dist);
 
 		if (this.torpedo_active == 1)
-		{
 			this.torpedo.updateTorpedo(currTime);
-		}
 
 		this.lastTime = currTime;
 	}
@@ -468,7 +497,7 @@ MySubmarine.prototype.updateSubmarine = function (currTime) { // fuse with displ
 MySubmarine.prototype.activateTorpedo = function() {
 	if (this.torpedo_active == 0)
 	{
-		this.torpedo = new MyTorpedo(this, this.submarine);
-		this.torpedo_active = 1;
+		this.torpedo = (this.scene.torpedo = new MyTorpedo(this.scene, this));
+		this.torpedo_active = (this.scene.torpedo_active = 1);
 	}
 }

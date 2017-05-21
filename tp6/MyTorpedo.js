@@ -4,7 +4,7 @@ function MyTorpedo(scene, sub) {
 	this.radunit = Math.PI / 180.0;
 
 	this.pos_x = sub.pos_x;
-	this.pos_y = sub.pos_y - 5;
+	this.pos_y = sub.pos_y - 1;
 	this.pos_z = sub.pos_z;
 	this.pos_rotation = sub.pos_rotation;
 
@@ -35,10 +35,10 @@ MyTorpedo.prototype = Object.create(CGFobject.prototype);
 MyTorpedo.prototype.constructor = MyTorpedo;
 
 MyTorpedo.prototype.displayTorpedo = function () {
-    this.scene.translate(this.pos_x, this.pos_y, this.pos_z);
+    this.scene.translate(this.cur_pos_x, this.cur_pos_y, this.cur_pos_z);
 	this.scene.pushMatrix();
-		this.scene.rotate(this.pos_rotation * this.radunit, 0, 1, 0);
-		this.scene.rotate(this.pos_angle * this.radunit, 1, 0, 0);
+		this.scene.rotate(this.cur_pos_rotation, 0, 1, 0);
+		this.scene.rotate(this.cur_pos_angle, 1, 0, 0);
         this.scene.pushMatrix();
 			this.scene.rotate(180 * this.radunit, 0, 1, 0);
 			this.scene.scale(0.1, 0.1, 0.1);
@@ -69,7 +69,7 @@ MyTorpedo.prototype.displayTorpedo = function () {
 	this.scene.popMatrix();
 }
 
-MyTorpedo.prototype.update = function(currTime)
+MyTorpedo.prototype.updateTorpedo = function(currTime)
 {
 	this.t += this.delta;
 
@@ -82,14 +82,23 @@ MyTorpedo.prototype.update = function(currTime)
 	var p3 = {x: this.target.pos_x, y: this.target.pos_y + 3, z: this.target.pos_z};
 	var p4 = {x: this.target.pos_x, y: this.target.pos_y, z: this.target.pos_z};
 
-	this.old_pos_x = this.cur_pos_x;
-	this.old_pos_y = this.cur_pos_y;
-	this.old_pos_z = this.cur_pos_z;
-	this.old_pos_rotation = this.cur_pos_rotation;
-	this.old_pos_angle = this.cur_pos_angle;
+	var old_pos_x = this.cur_pos_x;
+	var old_pos_y = this.cur_pos_y;
+	var old_pos_z = this.cur_pos_z;
 	this.cur_pos_x = m1 * p1.x + m2 * p2.x + m3 * p3.x + m4 * p4.x;
 	this.cur_pos_y = m1 * p1.y + m2 * p2.y + m3 * p3.y + m4 * p4.y;
 	this.cur_pos_z = m1 * p1.z + m2 * p2.z + m3 * p3.z + m4 * p4.z;
+/*
+	var delta_z = this.cur_pos_z - old_pos_z;
+	if (delta_z == 0)
+	{
 
+	}
+	else {
+		this.cur_pos_rotation = Math.atan(Math.abs((this.cur_pos_x - old_pos_x) / delta_z);
+	}
+*/
 
+	if (this.t >= 1)
+		this.delta = 0;
 }
