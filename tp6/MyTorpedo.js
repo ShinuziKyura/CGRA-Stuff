@@ -89,7 +89,7 @@ MyTorpedo.prototype.updateTorpedo = function(currTime)
 	var delta_y = this.pos_y - old_pos_y;
 	var delta_z = this.pos_z - old_pos_z;
 
-	this.pos_rotation = Math.acos(delta_z / Math.sqrt(Math.pow(delta_x, 2) + Math.pow(delta_z, 2)));
+	this.pos_rotation = delta_x / Math.abs(delta_x) * Math.acos(delta_z / Math.sqrt(Math.pow(delta_x, 2) + Math.pow(delta_z, 2)));
 	this.pos_angle = Math.asin(-delta_y / Math.sqrt(Math.pow(delta_x, 2) + Math.pow(delta_y, 2) + Math.pow(delta_z, 2)));
 
 	if (this.t >= 1)

@@ -474,21 +474,24 @@ MySubmarine.prototype.updateSubmarine = function (currTime) { // fuse with displ
 		 									30 * Math.sin(this.rotation_speed_right * this.radunit) - 30 * Math.sin(this.rotation_speed_left * this.radunit);
 		this.prop_angle = (this.prop_angle + this.speed * 6) % 360;
 
-		var min_index = null;
-		var min_dist = MAX_DISTANCE;
-		var tmp_dist = null;
-		for (i = 0; i < this.scene.targets.length; ++i)
-			if ((tmp_dist = Math.pow(this.scene.targets[i].pos_x - this.pos_x, 2) +
-							Math.pow(this.scene.targets[i].pos_y - this.pos_y, 2) +
-							Math.pow(this.scene.targets[i].pos_z - this.pos_z, 2)) < min_dist)
-			{
-				min_index = i;
-				min_dist = tmp_dist;
-			}
-		if (min_dist != MAX_DISTANCE)
+		if (this.torpedo_active == 0)
 		{
-			this.target = this.scene.targets[min_index];
-			this.target_distance = Math.sqrt(min_dist);
+			var min_index = null;
+			var min_dist = MAX_DISTANCE;
+			var tmp_dist = null;
+			for (i = 0; i < this.scene.targets.length; ++i)
+				if ((tmp_dist = Math.pow(this.scene.targets[i].pos_x - this.pos_x, 2) +
+								Math.pow(this.scene.targets[i].pos_y - this.pos_y, 2) +
+								Math.pow(this.scene.targets[i].pos_z - this.pos_z, 2)) < min_dist)
+				{
+					min_index = i;
+					min_dist = tmp_dist;
+				}
+			if (min_dist != MAX_DISTANCE)
+			{
+				this.target = this.scene.targets[min_index];
+				this.target_distance = Math.sqrt(min_dist);
+			}
 		}
 
 		if (this.torpedo_active == 1)
@@ -496,8 +499,10 @@ MySubmarine.prototype.updateSubmarine = function (currTime) { // fuse with displ
 			this.torpedo.updateTorpedo(currTime);
 			if (this.torpedo.t >= 1)
 			{
-				this.torpedo = null;
+				this.scene.targets.splice(this.scene.targets.indexOf(this.target), 1);
+				this.target = null;
 				this.scene.torpedo_active = (this.torpedo_active = 0);
+				this.torpedo = null;
 			}
 		}
 
@@ -506,7 +511,7 @@ MySubmarine.prototype.updateSubmarine = function (currTime) { // fuse with displ
 };
 
 MySubmarine.prototype.activateTorpedo = function() {
-	if (this.torpedo_active == 0)
+	if (this.torpedo_active == 0 && this.target != null)
 	{
 		this.scene.torpedo = (this.torpedo = new MyTorpedo(this.scene, this));
 		this.scene.torpedo_active = (this.torpedo_active = 1);

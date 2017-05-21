@@ -217,7 +217,6 @@ LightingScene.prototype.display = function() {
 	this.popMatrix();
 
 
-
 	this.pushMatrix();
 		for (i = 0; i < this.targets.length; ++i)
 			this.targets[i].displayTarget();
@@ -241,6 +240,4 @@ LightingScene.prototype.display = function() {
 			this.submarine.displaySubmarine();
 		this.popMatrix();
 	this.popMatrix();
-
-	// ---- END Primitive drawing section
 };
