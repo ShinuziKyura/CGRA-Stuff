@@ -54,11 +54,11 @@ function MySubmarine(scene) {
 	this.h_fin = new MySubmarineFin(scene, 0);
 	this.v_fin = new MySubmarineFin(scene, 0);
 	this.top_fin = new MySubmarineFin(scene, 1);
-/*	this.propeller_left = new MyPrism(scene, 4, 4);
-	this.propeller_right = new MyPrism(scene, 4, 4);
-	this.propeller_left_axis = MyLamp(scene, 32, 24);
-	this.propeller_right_axis = MyLamp(scene, 32, 24);
-*/
+	this.propeller_left = new MyPrism(scene, 4, 4, 0, 0);
+	this.propeller_right = new MyPrism(scene, 4, 4, 0, 0);
+	this.propeller_left_axis = new MyLamp(scene, 32, 16, 0);
+	this.propeller_right_axis = new MyLamp(scene, 32, 16, 0);
+
 	this.target;
 	this.target_distance = MAX_DISTANCE;
 	this.torpedo;
@@ -168,6 +168,40 @@ MySubmarine.prototype.displaySubmarine = function () {
 			this.scene.scale(0.13, 0.13, 2.6); // 0.57 * 1.5 // on a 1,1,2 scale
 
 			this.periscope_top_base.display();
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+			
+			//this.scene.translate(-1.05, -.5, 7.95);
+			this.scene.translate(-1.15, -.48, 7.95);
+			this.scene.scale(.2, .5, .01); // 0.57 * 1.5 // on a 1,1,2 scale
+			this.scene.rotate(45 * this.radunit, 0, 0, 1);
+			this.scene.rotate(90 * this.radunit, 1, 1, 0);
+			this.propeller_left.display();
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+			this.scene.translate(.96, -.48, 7.95);
+			this.scene.scale(.2, .5, .01); // 0.57 * 1.5 // on a 1,1,2 scale
+			this.scene.rotate(45 * this.radunit, 0, 0, 1);
+			this.scene.rotate(90 * this.radunit, 1, 1, 0);
+			this.propeller_right.display();
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+			
+			this.scene.translate(1.05, -.5, 7.95);
+			this.scene.scale(.09, .09, .09); // 0.57 * 1.5 // on a 1,1,2 scale
+			this.scene.rotate(180 * this.radunit, 0, 1, 0);
+			this.propeller_left_axis.display();
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+			
+			this.scene.translate(-1.05, -.5, 7.95);
+			this.scene.scale(.09, .09, .09); // 0.57 * 1.5 // on a 1,1,2 scale
+			this.scene.rotate(180 * this.radunit, 0, 1, 0);
+			this.propeller_right_axis.display();
 		this.scene.popMatrix();
 
 	this.scene.popMatrix();
