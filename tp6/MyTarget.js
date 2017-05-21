@@ -25,7 +25,7 @@ MyTarget.prototype.displayTarget = function () {
 	this.scene.pushMatrix();
 	    this.pos_angle = (this.pos_angle + 1) % 360;
 //	    this.pos_y+= Math.sin(this.pos_angle * this.radunit) / 50.0;
-	    this.scene.translate(this.pos_x, this.pos_y, this.pos_z);
+	    this.scene.translate(this.pos_x, this.pos_y - 2.5, this.pos_z);
 	    this.scene.pushMatrix();
 	        this.scene.pushMatrix();
 	            this.scene.rotate(90 * this.radunit, 1, 0, 0);

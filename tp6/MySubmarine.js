@@ -61,9 +61,9 @@ function MySubmarine(scene) {
 	this.propeller_left_axis = new MyLamp(scene, 32, 16, 0);
 	this.propeller_right_axis = new MyLamp(scene, 32, 16, 0);
 
-	this.target;
+	this.target = null;
 	this.target_distance = MAX_DISTANCE;
-	this.torpedo;
+	this.torpedo = null;
 	this.torpedo_active = 0;
 }
 
@@ -470,12 +470,13 @@ MySubmarine.prototype.updateSubmarine = function (currTime) { // fuse with displ
 		this.pos_z += (this.speed / 5) * -Math.cos(this.pos_rotation * this.radunit);
 
 		this.h_fin_angle = -this.pos_angle;
-		this.v_fin_angle = 30 * Math.sin(this.rotation_speed_left * this.radunit) - 30 * Math.sin(this.rotation_speed_right * this.radunit);
+		this.v_fin_angle = this.speed >= 0 ? 30 * Math.sin(this.rotation_speed_left * this.radunit) - 30 * Math.sin(this.rotation_speed_right * this.radunit) :
+		 									30 * Math.sin(this.rotation_speed_right * this.radunit) - 30 * Math.sin(this.rotation_speed_left * this.radunit);
 		this.prop_angle = (this.prop_angle + this.speed * 6) % 360;
 
-		var min_index;
+		var min_index = null;
 		var min_dist = MAX_DISTANCE;
-		var tmp_dist;
+		var tmp_dist = null;
 		for (i = 0; i < this.scene.targets.length; ++i)
 			if ((tmp_dist = Math.pow(this.scene.targets[i].pos_x - this.pos_x, 2) +
 							Math.pow(this.scene.targets[i].pos_y - this.pos_y, 2) +
@@ -484,11 +485,21 @@ MySubmarine.prototype.updateSubmarine = function (currTime) { // fuse with displ
 				min_index = i;
 				min_dist = tmp_dist;
 			}
-		this.target = this.scene.targets[min_index];
-		this.target_distance = Math.sqrt(min_dist);
+		if (min_dist != MAX_DISTANCE)
+		{
+			this.target = this.scene.targets[min_index];
+			this.target_distance = Math.sqrt(min_dist);
+		}
 
 		if (this.torpedo_active == 1)
+		{
 			this.torpedo.updateTorpedo(currTime);
+			if (this.torpedo.t >= 1)
+			{
+				this.torpedo = null;
+				this.scene.torpedo_active = (this.torpedo_active = 0);
+			}
+		}
 
 		this.lastTime = currTime;
 	}
@@ -497,7 +508,7 @@ MySubmarine.prototype.updateSubmarine = function (currTime) { // fuse with displ
 MySubmarine.prototype.activateTorpedo = function() {
 	if (this.torpedo_active == 0)
 	{
-		this.torpedo = (this.scene.torpedo = new MyTorpedo(this.scene, this));
-		this.torpedo_active = (this.scene.torpedo_active = 1);
+		this.scene.torpedo = (this.torpedo = new MyTorpedo(this.scene, this));
+		this.scene.torpedo_active = (this.torpedo_active = 1);
 	}
 }
